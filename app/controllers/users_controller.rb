@@ -4,6 +4,7 @@ class UsersController < ApplicationController
   def new
     redirect_to root_path, :notice => "You are already registered" if current_user
     session[:camp_id] = params[:camp_id]
+    @camp = Camp.find(params[:camp_id])
     @user = User.new
     @billing_info = @user.build_billing_info
   end
