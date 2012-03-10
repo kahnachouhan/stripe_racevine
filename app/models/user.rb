@@ -77,11 +77,10 @@ class User < ActiveRecord::Base
   end
   
   def resitration_notification
-    UserMailer.resitration_successfully(self).deliver
-    unless (users = User.where(:admin => true)).blank?
-debugger 
-      UserMailer.new_resitration(users[0], self).deliver
-    end
+    #UserMailer.resitration_successfully(self).deliver
+    #unless (users = User.where(:admin => true)).blank?
+      #UserMailer.new_resitration(users[0], self).deliver
+    #end
   end
 
 end
