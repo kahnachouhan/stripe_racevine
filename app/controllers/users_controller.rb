@@ -10,6 +10,7 @@ class UsersController < ApplicationController
   end
 
   def create
+    @camp = Camp.find(session[:camp_id])
     @user = User.new(params[:user])
     @user.stripe_camp_id = session[:camp_id]
     if @user.save
