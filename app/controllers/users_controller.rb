@@ -13,6 +13,7 @@ class UsersController < ApplicationController
     @camp = Camp.find(session[:camp_id])
     @user = User.new(params[:user])
     @user.stripe_camp_id = session[:camp_id]
+    @user.camp_id = session[:camp_id]
     if @user.save
       session[:camp_id] = nil
       redirect_to root_path, :notice => "Signed up!"

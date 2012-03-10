@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :name, :email, :password, :password_confirmation, :stripe_token, :last_4_digits
+    attr_accessible :name, :email, :password, :password_confirmation, :stripe_token, :last_4_digits, :camp_id, :dob, :lname, :addr1, :addr2, :city, :state, :zip, :admin
 
   belongs_to :camp
   has_one :billing_info
