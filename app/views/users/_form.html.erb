@@ -1,0 +1,209 @@
+<%= javascript_include_tag 'billing_info' %>
+<div class="row">
+  <div class="span6 columns">
+    <fieldset>
+      <%= nested_form_for @user, :html => {:class => 'form-stacked'} do |f| %>
+        <% if user.errors.any? %>
+          <div class="alert-message block-message error">
+            <p><%= "#{pluralize(user.errors.count, "problem")} with your registration:" %></p>
+            <div class="errors">
+              <% user.errors.full_messages.each do |msg| %>
+                <p><%= msg %></p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="clearfix">
+          <%= f.label :name, "First Name" %>
+          <div class="input">
+            <%= f.text_field :name, :class => "field" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :lname, "Last Name" %>
+          <div class="input">
+            <%= f.text_field :lname, :class => "field" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :email, "Email Address" %>
+          <div class="input">
+            <%= f.text_field :email, :class => "field" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :dob, "Date of Birth" %>
+          <div class="input small">
+            <%= f.date_select :dob, {:order => [:month, :day, :year], :start_year => Date.today.year - 50, :end_year => Date.today.year - 5},{:class => "small"} %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :addr1, "Address 1:" %>
+          <div class="input">
+            <%= f.text_field :addr1, :class => "field" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :addr2, "Address 2:" %>
+          <div class="input">
+            <%= f.text_field :addr2, :class => "field" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :city, "City:" %>
+          <div class="input">
+            <%= f.text_field :city, :class => "field" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :state, "State" %>
+          <div class="input">
+            <%= f.select :state, options_for_select(us_states) %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :zip, "Zip" %>
+          <div class="input">
+            <%= f.text_field :zip, :class => "field" %>
+          </div>
+        </div>
+
+        <div class="clearfix" style="display:none">
+          <%= f.label :password %>
+          <div class="input">
+            <%= f.password_field :password, :class => "field", :value=>123456 %>
+            <% if defined? editing %>
+              <span class="help-block">Leave blank to keep your current password</span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="clearfix" style="display:none">
+          <%= f.label :password_confirmation %>
+          <div class="input">
+            <%= f.password_field :password_confirmation, :class => "field", :value=>123456 %>
+          </div>
+
+          <%= f.hidden_field :stripe_token %>
+          <%= f.hidden_field :last_4_digits %>
+        </div>
+        <br/><br/>
+        <div class="page-header">
+          <h2>Billing Information</h2>
+       </div>
+       <input type="checkbox" id="chbx" value=0><label for="chbx">Check here if different from participant info</label>
+       <div class="billing_info" style="display:none;">
+       <% f.fields_for :billing_info do |b_info| %>
+        <div class="clearfix">
+          <%= b_info.label :addr1, "Address 1:" %>
+          <div class="input">
+            <%= b_info.text_field :addr1, :class => "field" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= b_info.label :addr2, "Address 2:" %>
+          <div class="input">
+            <%= b_info.text_field :addr2, :class => "field" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= b_info.label :city, "City:" %>
+          <div class="input">
+            <%= b_info.text_field :city, :class => "field" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= b_info.label :state, "State" %>
+          <div class="input">
+            <%= f.select :state, options_for_select(us_states) %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= b_info.label :zip, "Zip" %>
+          <div class="input">
+            <%= b_info.text_field :zip, :class => "field" %>
+          </div>
+        </div>
+       <% end %>
+
+        <% if user.last_4_digits %>
+          <div id="change-card" class="clearfix">
+            <label>Card</label>
+            <div class="input">
+              <span>
+                Using card ending with 
+                <%= user.last_4_digits %> 
+                <%= link_to "(change)", "#" %>
+              </span>
+            </div>
+          </div>
+        <% end %>
+        </div>
+        <br/><br/>
+        <div class="page-header">
+          <h2>Payment Information</h2>
+       </div>
+        <noscript>
+          <p>This form requires Javascript to use</p>
+        </noscript>
+
+        <div id="credit-card" style="<%= user.last_4_digits ? "display:none" : "display:block" %>">
+          <div id="credit-card-errors" style="display:none">
+            <div id="stripe-error-message" class="alert-message block-message error">
+            </div>
+          </div>
+
+          <!-- these fields are disabled before submission and are never transmitted back to rails -->
+          <div class="clearfix">
+            <%= label_tag :card_type %>
+            <div class="input">
+              <%= select_tag :credit_card_type, options_for_select(card_type), :class => "field", :disabled => true %>
+            </div>
+          </div>
+
+          <div class="clearfix">
+            <%= label_tag :credit_card_number %>
+            <div class="input">
+              <%= text_field_tag :credit_card_number, params[:credit_card_number], :class => "field", :disabled => true %>
+            </div>
+          </div>
+
+          <div class="clearfix">
+            <%= label_tag :cvv, "Security code (CVV)" %>
+            <div class="input">
+              <%= text_field_tag :cvv, params[:cvv], :class => "small", :disabled => true %>
+            </div>
+          </div>
+
+          <div class="clearfix">
+            <%= label_tag :expiry_date %>
+            <div class="input">
+              <%= date_select "", :expiry_date, {:discard_day => true, :order => [:month, :year], :use_month_numbers => true, :start_year => Date.today.year, :end_year => Date.today.year + 25, :disabled => true}, {:class => "small"} %>
+            </div>
+            <!-- empty -->
+          </div>
+          <span class="note">
+            Your credit card details will be sent directly to our payment processor
+          </span>
+        </div>
+
+        <div class="actions">
+          <%= f.submit((defined?(editing) ? "Update" : "Submit"), :class => "btn primary") %>
+        </div>
+      <% end %>
+    </fieldset>
+  </div>
+</div>

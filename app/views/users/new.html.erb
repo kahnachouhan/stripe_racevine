@@ -1,0 +1,10 @@
+<div class="margin_left_head">
+  <h1>Running Camp Registration</h1>
+  <h3>When: <%= @camp.created_at.strftime("%A, %B %d, %Y")%></h3>
+  <h3>Cost: <%= @camp.cost%>$</h3>
+</div>
+<br/>
+<div class="page-header">
+  <h2>Participant Info</h2>
+</div>
+<%= render :partial => 'users/form', :locals => {:user => @user} %>

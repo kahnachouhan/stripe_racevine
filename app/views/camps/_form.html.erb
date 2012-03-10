@@ -1,0 +1,30 @@
+<%= form_for(@camp) do |f| %>
+  <% if @camp.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@camp.errors.count, "error") %> prohibited this camp from being saved:</h2>
+
+      <ul>
+      <% @camp.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+        <div class="clearfix">
+          <%= f.label :name %>
+          <div class="input">
+            <%= f.text_field :name %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :cost %>
+          <div class="input">
+            <%= f.text_field :cost %>
+          </div>
+        </div>
+  <div class="actions">
+    <%= f.submit((defined?(editing) ? "Update" : "Submit"), :class => "btn primary") %>
+  </div>
+<% end %>

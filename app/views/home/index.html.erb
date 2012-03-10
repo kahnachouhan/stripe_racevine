@@ -1,0 +1,21 @@
+  <h1>Listing camps</h1>
+
+  <table>
+
+    <tr>
+      <th>Name</th>
+      <th>Cost</th>
+      <th></th>
+   </tr>
+  <% (@camps.data rescue []).each do |camp| %>
+    <tr>
+      <td><%= camp.name %></td>
+      <td><%= camp.amount/100 %>$</td>
+      <td><p><%= link_to "Join Today!", register_path(:camp_id =>camp.id) %></p></td>
+    </tr>
+  <% end %>
+
+  </table>
+
+
+
